@@ -1,6 +1,9 @@
 {
   "name": "grpc-modern",
-  "version": "0.4.0",
+  "version": "0.4.1",
+  "repository": "https://github.com/daangn/grpc-modern",
+  "license": "Apache-2.0",
+  "author": "Tony Won <tony@daangn.com>",
   "main": "lib/index.js",
   "module": "lib/index.mjs",
   "types": "lib/index.d.ts",
@@ -9,16 +12,16 @@
     "README.md"
   ],
   "scripts": {
-    "clean": "rimraf lib",
     "build": "concurrently \"yarn:build:*\"",
     "build:cjs": "babel src --env-name commonjs --out-dir ./lib --extensions .ts",
     "build:dts": "tsc --emitDeclarationOnly",
     "build:esm": "babel src --env-name esmodule --out-dir ./lib --extensions .ts --out-file-extension .mjs",
+    "clean": "rimraf lib",
     "prepack": "yarn clean && yarn build",
-    "tsc": "tsc --emitDeclarationOnly",
     "test": "BABEL_ENV=commonjs jest",
     "test:codegen": "cd test && sh ./codegen.sh",
-    "test:coverage": "yarn test --coverage"
+    "test:coverage": "yarn test --coverage",
+    "tsc": "tsc --emitDeclarationOnly"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
