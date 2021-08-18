@@ -1,0 +1,38 @@
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/build-grpc-modern.yml"
+      - "packages/grpc-modern/**"
+
+name: Build gRPC Modern
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14"
+
+      - id: yarn-unplugged-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            .yarn/unplugged/
+            .yarn/build-state.yml
+            .yarn/install-state.gz
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: 'Install unplugged dependencies & Check that the Yarn files don''t change on new installs (fix w/ "yarn install")'
+        run: |
+          yarn install --immutable --immutable-cache
+        shell: bash
+
+      - name: Build gRPC Modern
+        run: |
+          yarn workspace grpc-modern build
