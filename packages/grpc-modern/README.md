@@ -1,6 +1,6 @@
 # gRPC Modern
 
-Make grpc client fit in modern JavaScript(TypeScript) environment.
+Make grpc clients(`@grpc/grpc-js`, `grpc`) fit in modern JavaScript(TypeScript) environment.
 
 - Change callback interface with `Promise`
 - Change `new` + `set` interface with object literal
@@ -13,16 +13,18 @@ $ yarn add grpc-modern
 
 ## Usage
 
-### without `grpc-modern`
-
 ```typescript
-import { credentials } from "grpc";
+/**
+ * without `grpc-modern`
+ */
+import * as grpc from "@grpc/grpc-js";
 import { GetSomethingReq, SomethingClient } from "../stubs/something/...";
 
 const client = new SomethingClient(
   "example.com:80",
-  credentials.createInsecure()
+  grpc.credentials.createInsecure()
 );
+
 const req = new GetSomethingReq();
 req.setId("...");
 req.setSomeOption(false);
@@ -30,18 +32,15 @@ req.setSomeOption(false);
 client.getSomething(req, (error, response) => {
   console.log(response);
 });
-```
 
-### with `grpc-modern`
-
-```typescript
-import { credentials } from "grpc";
+/**
+ * with `grpc-modern`
+ */
 import { makeModernClient } from "grpc-modern";
-import { GetSomethingReq, SomethingClient } from "../stubs/something/...";
 
 const client = makeModernClient(SomethingClient, {
   address: "example.com:80",
-  credentials: credentials.createInsecure(),
+  credentials: grpc.credentials.createInsecure(),
 });
 
 const [error, response] = await client.getSomething(
@@ -51,31 +50,20 @@ const [error, response] = await client.getSomething(
   })
 );
 
-console.log(response);
-```
-
-### Nested message with `grpc-modern`
-
-```typescript
-import { Int64Value } from "google-protobuf/google/protobuf/wrappers_pb";
-import { credentials } from "grpc";
-import { makeModernClient, set } from "grpc-modern";
-import { GetSomethingReq, SomethingClient } from "../stubs/something/...";
+/**
+ * or you can use with `grpc`
+ */
+import * as grpc from "grpc";
 
 const client = makeModernClient(SomethingClient, {
   address: "example.com:80",
-  credentials: credentials.createInsecure(),
+  credentials: grpc.credentials.createInsecure(),
 });
 
 const [error, response] = await client.getSomething(
   set(GetSomethingReq, {
-    ids: [1, 2, 3].map((i) =>
-      set(Int64Value, {
-        value: i,
-      })
-    ),
+    id: "...",
+    someOption: false,
   })
 );
-
-console.log(response);
 ```
