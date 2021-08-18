@@ -4,26 +4,48 @@
 var grpc = require('@grpc/grpc-js');
 var helloworld_helloworld_pb = require('../helloworld/helloworld_pb.js');
 
-function serialize_helloworld_HelloReq(arg) {
-  if (!(arg instanceof helloworld_helloworld_pb.HelloReq)) {
-    throw new Error('Expected argument of type helloworld.HelloReq');
+function serialize_helloworld_SayHelloReq(arg) {
+  if (!(arg instanceof helloworld_helloworld_pb.SayHelloReq)) {
+    throw new Error('Expected argument of type helloworld.SayHelloReq');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_helloworld_HelloReq(buffer_arg) {
-  return helloworld_helloworld_pb.HelloReq.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_helloworld_SayHelloReq(buffer_arg) {
+  return helloworld_helloworld_pb.SayHelloReq.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_helloworld_HelloRes(arg) {
-  if (!(arg instanceof helloworld_helloworld_pb.HelloRes)) {
-    throw new Error('Expected argument of type helloworld.HelloRes');
+function serialize_helloworld_SayHelloRes(arg) {
+  if (!(arg instanceof helloworld_helloworld_pb.SayHelloRes)) {
+    throw new Error('Expected argument of type helloworld.SayHelloRes');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_helloworld_HelloRes(buffer_arg) {
-  return helloworld_helloworld_pb.HelloRes.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_helloworld_SayHelloRes(buffer_arg) {
+  return helloworld_helloworld_pb.SayHelloRes.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_helloworld_ThrowReq(arg) {
+  if (!(arg instanceof helloworld_helloworld_pb.ThrowReq)) {
+    throw new Error('Expected argument of type helloworld.ThrowReq');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_helloworld_ThrowReq(buffer_arg) {
+  return helloworld_helloworld_pb.ThrowReq.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_helloworld_ThrowRes(arg) {
+  if (!(arg instanceof helloworld_helloworld_pb.ThrowRes)) {
+    throw new Error('Expected argument of type helloworld.ThrowRes');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_helloworld_ThrowRes(buffer_arg) {
+  return helloworld_helloworld_pb.ThrowRes.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
@@ -32,12 +54,23 @@ var GreeterService = exports.GreeterService = {
     path: '/helloworld.Greeter/SayHello',
     requestStream: false,
     responseStream: false,
-    requestType: helloworld_helloworld_pb.HelloReq,
-    responseType: helloworld_helloworld_pb.HelloRes,
-    requestSerialize: serialize_helloworld_HelloReq,
-    requestDeserialize: deserialize_helloworld_HelloReq,
-    responseSerialize: serialize_helloworld_HelloRes,
-    responseDeserialize: deserialize_helloworld_HelloRes,
+    requestType: helloworld_helloworld_pb.SayHelloReq,
+    responseType: helloworld_helloworld_pb.SayHelloRes,
+    requestSerialize: serialize_helloworld_SayHelloReq,
+    requestDeserialize: deserialize_helloworld_SayHelloReq,
+    responseSerialize: serialize_helloworld_SayHelloRes,
+    responseDeserialize: deserialize_helloworld_SayHelloRes,
+  },
+  throw: {
+    path: '/helloworld.Greeter/Throw',
+    requestStream: false,
+    responseStream: false,
+    requestType: helloworld_helloworld_pb.ThrowReq,
+    responseType: helloworld_helloworld_pb.ThrowRes,
+    requestSerialize: serialize_helloworld_ThrowReq,
+    requestDeserialize: deserialize_helloworld_ThrowReq,
+    responseSerialize: serialize_helloworld_ThrowRes,
+    responseDeserialize: deserialize_helloworld_ThrowRes,
   },
 };
 

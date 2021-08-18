@@ -5,7 +5,7 @@ import {
   GreeterService,
   IGreeterServer,
 } from "../../__generated__/grpc-js/helloworld/helloworld_grpc_pb";
-import { HelloRes } from "../../__generated__/grpc-js/helloworld/helloworld_pb";
+import { SayHelloRes } from "../../__generated__/grpc-js/helloworld/helloworld_pb";
 
 export function makeServer({ port }: { port: number }) {
   const server = new grpc.Server();
@@ -14,10 +14,17 @@ export function makeServer({ port }: { port: number }) {
     sayHello(call, callback) {
       callback(
         null,
-        set(HelloRes, {
+        set(SayHelloRes, {
           message: `Hello, ${call.request.getName()}`,
         })
       );
+    },
+    throw(call, callback) {
+      callback({
+        code: grpc.status.INTERNAL,
+        name: "INTERNAL_SERVER_ERROR",
+        message: "Error example",
+      });
     },
   };
 
