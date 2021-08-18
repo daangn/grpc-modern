@@ -7,8 +7,8 @@ on:
 name: Integration - gRPC Modern
 
 jobs:
-  build:
-    name: Integration
+  check:
+    name: Check that all functions are working properly
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

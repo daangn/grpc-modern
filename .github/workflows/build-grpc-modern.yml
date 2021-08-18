@@ -8,7 +8,7 @@ name: Build - gRPC Modern
 
 jobs:
   build:
-    name: Build
+    name: Build `grpc-modern` package and check TypeScript types
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
