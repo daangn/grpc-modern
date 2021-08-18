@@ -1,6 +1,6 @@
 {
   "name": "grpc-modern",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "repository": "https://github.com/daangn/grpc-modern",
   "license": "Apache-2.0",
   "author": "Tony Won <tony@daangn.com>",
