@@ -8,7 +8,7 @@ name: Integration - gRPC Modern
 
 jobs:
   build:
-    name: Build
+    name: Integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -40,3 +40,5 @@ jobs:
       - name: Run tests
         run: |
           yarn workspace grpc-modern test:coverage
+
+      - uses: codecov/codecov-action@v2

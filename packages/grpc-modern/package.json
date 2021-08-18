@@ -20,7 +20,6 @@
     "prepack": "yarn clean && yarn build",
     "test": "BABEL_ENV=commonjs jest",
     "test:codegen": "cd test && sh ./codegen.sh",
-    "test:coverage": "yarn test --coverage",
     "tsc": "tsc --emitDeclarationOnly"
   },
   "devDependencies": {
