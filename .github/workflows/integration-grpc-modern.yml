@@ -39,6 +39,6 @@ jobs:
 
       - name: Run tests
         run: |
-          yarn workspace grpc-modern test:coverage
+          yarn workspace grpc-modern test
 
       - uses: codecov/codecov-action@v2
