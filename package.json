@@ -1,0 +1,21 @@
+{
+  "name": "@grpc-modern/monorepo",
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "resolutions": {
+    "typescript": "4.3.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.0",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
+  },
+  "dependenciesMeta": {
+    "grpc_tools_node_protoc_ts@5.3.2": {
+      "unplugged": true
+    }
+  },
+  "packageManager": "yarn@2.4.2"
+}
