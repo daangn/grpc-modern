@@ -1,0 +1,50 @@
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/build-grpc-modern.yml"
+      - "packages/grpc-modern/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build-grpc-modern.yml"
+      - "packages/grpc-modern/**"
+
+name: Integration - gRPC Modern
+
+jobs:
+  check:
+    name: Check that all functions are working properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14"
+
+      - id: yarn-unplugged-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            .yarn/unplugged/
+            .yarn/build-state.yml
+            .yarn/install-state.gz
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: 'Install unplugged dependencies & Check that the Yarn files don''t change on new installs (fix w/ "yarn install")'
+        run: |
+          yarn install --immutable --immutable-cache
+        shell: bash
+
+      - name: Setup test environment
+        run: |
+          yarn workspace grpc-modern test:codegen
+
+      - name: Run tests
+        run: |
+          yarn workspace grpc-modern test
+
+      - uses: codecov/codecov-action@v2
