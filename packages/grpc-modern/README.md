@@ -1,6 +1,6 @@
 # gRPC Modern
 
-Make grpc clients(`@grpc/grpc-js`, `grpc`) fit in modern JavaScript(TypeScript) environment.
+Makes grpc clients(`@grpc/grpc-js`, `grpc`) fit in modern JavaScript(TypeScript) environment.
 
 - Change callback interface with `Promise`
 - Change `new` + `set` interface with object literal
