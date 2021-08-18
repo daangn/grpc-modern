@@ -3,6 +3,12 @@ on:
     paths:
       - ".github/workflows/build-grpc-modern.yml"
       - "packages/grpc-modern/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build-grpc-modern.yml"
+      - "packages/grpc-modern/**"
 
 name: Build - gRPC Modern
 
