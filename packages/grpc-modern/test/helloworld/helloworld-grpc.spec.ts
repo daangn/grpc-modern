@@ -2,7 +2,7 @@ import * as grpc from "grpc";
 
 import { makeModernClient, ModernClient, set } from "../../src";
 import { GreeterClient } from "../__generated__/grpc/helloworld/helloworld_grpc_pb";
-import { HelloReq } from "../__generated__/grpc/helloworld/helloworld_pb";
+import { SayHelloReq } from "../__generated__/grpc/helloworld/helloworld_pb";
 import { makeServer } from "./grpc-server";
 
 let server: ReturnType<typeof makeServer>;
@@ -22,13 +22,36 @@ describe("helloworld (grpc)", () => {
   });
 
   test("sayHello", async () => {
-    const [err, resp] = await client.sayHello(
-      set(HelloReq, {
-        name: "Tony",
+    const name = "Tony";
+
+    const [, resp1] = await client.sayHello(
+      set(SayHelloReq, {
+        name,
       })
     );
 
-    expect(resp?.message).toEqual(`Hello, Tony`);
+    expect(resp1?.message).toEqual(`Hello, ${name}`);
+
+    const [, resp2] = await client.sayHello(
+      set(SayHelloReq, {
+        name,
+      }),
+      new grpc.Metadata()
+    );
+
+    expect(resp2?.message).toEqual(`Hello, ${name}`);
+
+    const [, resp3] = await client.sayHello(
+      set(SayHelloReq, {
+        name,
+      }),
+      new grpc.Metadata(),
+      {
+        deadline: Date.now() + 1000,
+      }
+    );
+
+    expect(resp3?.message).toEqual(`Hello, ${name}`);
   });
 
   afterAll(() => {

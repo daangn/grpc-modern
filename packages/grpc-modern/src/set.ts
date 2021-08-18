@@ -37,7 +37,7 @@ export function set<M extends Message>(
     const upperedKey = key[0].toUpperCase() + key.slice(1);
 
     if (!msg[`set${upperedKey}`]) {
-      throw new Error(`Unknown parameter ${key}`);
+      throw new Error(`Unknown parameter: ${key}`);
     }
 
     msg[`set${upperedKey}`](_props[key]);
