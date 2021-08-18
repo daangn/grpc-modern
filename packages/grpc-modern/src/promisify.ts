@@ -69,11 +69,7 @@ export type PromisifiedMethod<M extends Message, R> = {
   >;
 };
 
-type ServiceError = GrpcServiceError | GrpcJsServiceError;
-
-type PromisifiedMethodResult<R> =
-  | [error: ServiceError]
-  | [error: null, response: R extends { toObject(): infer O } ? O : never];
+type PromisifiedMethodResult<R> = R extends { toObject(): infer O } ? O : never;
 
 export function promisify<M extends Message, R extends { toObject(): any }>(
   method: GrpcMethod<M, R>
@@ -93,12 +89,12 @@ export function promisify<M extends Message, R extends { toObject(): any }>(
     metadata?: Metadata,
     options?: Partial<CallOptions>
   ): Promise<PromisifiedMethodResult<R>> {
-    return new Promise<PromisifiedMethodResult<R>>((resolve) => {
+    return new Promise<PromisifiedMethodResult<R>>((resolve, reject) => {
       const callback: GrpcCallback<R> = (error, response) => {
         if (error) {
-          resolve([error]);
+          reject(error);
         } else {
-          resolve([null, response.toObject()]);
+          resolve(response.toObject());
         }
       };
 

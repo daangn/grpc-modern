@@ -2,7 +2,10 @@ import * as grpc from "grpc";
 
 import { makeModernClient, ModernClient, set } from "../../src";
 import { GreeterClient } from "../__generated__/grpc/helloworld/helloworld_grpc_pb";
-import { SayHelloReq } from "../__generated__/grpc/helloworld/helloworld_pb";
+import {
+  SayHelloReq,
+  ThrowReq,
+} from "../__generated__/grpc/helloworld/helloworld_pb";
 import { makeServer } from "./grpc-server";
 
 let server: ReturnType<typeof makeServer>;
@@ -24,34 +27,44 @@ describe("helloworld (grpc)", () => {
   test("sayHello", async () => {
     const name = "Tony";
 
-    const [, resp1] = await client.sayHello(
-      set(SayHelloReq, {
-        name,
-      })
+    await expect(
+      client.sayHello(
+        set(SayHelloReq, {
+          name,
+        })
+      )
+    ).resolves.toEqual({
+      message: `Hello, ${name}`,
+    });
+
+    await expect(
+      client.sayHello(
+        set(SayHelloReq, {
+          name,
+        }),
+        new grpc.Metadata()
+      )
+    ).resolves.toEqual({
+      message: `Hello, ${name}`,
+    });
+
+    await expect(
+      client.sayHello(
+        set(SayHelloReq, {
+          name,
+        }),
+        new grpc.Metadata(),
+        {
+          deadline: Date.now() + 1000,
+        }
+      )
+    ).resolves.toEqual({
+      message: `Hello, ${name}`,
+    });
+
+    await expect(client.throw(set(ThrowReq, {}))).rejects.toEqual(
+      new Error("13 INTERNAL: Error example")
     );
-
-    expect(resp1?.message).toEqual(`Hello, ${name}`);
-
-    const [, resp2] = await client.sayHello(
-      set(SayHelloReq, {
-        name,
-      }),
-      new grpc.Metadata()
-    );
-
-    expect(resp2?.message).toEqual(`Hello, ${name}`);
-
-    const [, resp3] = await client.sayHello(
-      set(SayHelloReq, {
-        name,
-      }),
-      new grpc.Metadata(),
-      {
-        deadline: Date.now() + 1000,
-      }
-    );
-
-    expect(resp3?.message).toEqual(`Hello, ${name}`);
   });
 
   afterAll(() => {
