@@ -4,7 +4,7 @@ on:
       - ".github/workflows/build-grpc-modern.yml"
       - "packages/grpc-modern/**"
 
-name: Build - gRPC Modern
+name: Integration - gRPC Modern
 
 jobs:
   build:
@@ -33,6 +33,10 @@ jobs:
           yarn install --immutable --immutable-cache
         shell: bash
 
-      - name: Build gRPC Modern
+      - name: Setup test environment
         run: |
-          yarn workspace grpc-modern build
+          yarn workspace grpc-modern test:codegen
+
+      - name: Run tests
+        run: |
+          yarn workspace grpc-modern test:coverage
