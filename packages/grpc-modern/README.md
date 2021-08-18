@@ -49,7 +49,7 @@ const client = makeModernClient(SomethingClient, {
   credentials: grpc.credentials.createInsecure(),
 });
 
-const [error, response] = await client.getSomething(
+const response = await client.getSomething(
   set(GetSomethingReq, {
     id: "...",
     someOption: false,
@@ -66,7 +66,7 @@ const client = makeModernClient(SomethingClient, {
   credentials: grpc.credentials.createInsecure(),
 });
 
-const [error, response] = await client.getSomething(
+const response = await client.getSomething(
   set(GetSomethingReq, {
     id: "...",
     someOption: false,

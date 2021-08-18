@@ -27,42 +27,44 @@ describe("helloworld (grpc-js)", () => {
   test("sayHello", async () => {
     const name = "Tony";
 
-    const [err1, resp1] = await client.sayHello(
-      set(SayHelloReq, {
-        name,
-      })
+    await expect(
+      client.sayHello(
+        set(SayHelloReq, {
+          name,
+        })
+      )
+    ).resolves.toEqual({
+      message: `Hello, ${name}`,
+    });
+
+    await expect(
+      client.sayHello(
+        set(SayHelloReq, {
+          name,
+        }),
+        new grpc.Metadata()
+      )
+    ).resolves.toEqual({
+      message: `Hello, ${name}`,
+    });
+
+    await expect(
+      client.sayHello(
+        set(SayHelloReq, {
+          name,
+        }),
+        new grpc.Metadata(),
+        {
+          deadline: Date.now() + 1000,
+        }
+      )
+    ).resolves.toEqual({
+      message: `Hello, ${name}`,
+    });
+
+    await expect(client.throw(set(ThrowReq, {}))).rejects.toEqual(
+      new Error("13 INTERNAL: Error example")
     );
-
-    expect(err1).toBeNull();
-    expect(resp1?.message).toEqual(`Hello, ${name}`);
-
-    const [err2, resp2] = await client.sayHello(
-      set(SayHelloReq, {
-        name,
-      }),
-      new grpc.Metadata()
-    );
-
-    expect(err2).toBeNull();
-    expect(resp2?.message).toEqual(`Hello, ${name}`);
-
-    const [err3, resp3] = await client.sayHello(
-      set(SayHelloReq, {
-        name,
-      }),
-      new grpc.Metadata(),
-      {
-        deadline: Date.now() + 1000,
-      }
-    );
-
-    expect(err3).toBeNull();
-    expect(resp3?.message).toEqual(`Hello, ${name}`);
-
-    const [err4, resp4] = await client.throw(set(ThrowReq, {}));
-
-    expect(err4.message).toEqual("13 INTERNAL: Error example");
-    expect(resp4).toBeUndefined();
   });
 
   afterAll(() => {
