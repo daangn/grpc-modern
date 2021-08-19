@@ -15,6 +15,14 @@ Makes grpc clients(`@grpc/grpc-js`, `grpc`) fit in modern JavaScript(TypeScript)
 
 ```bash
 $ yarn add grpc-modern
+
+# peer dependencies
+$ yarn add @grpc/grpc-js google-protobuf
+$ yarn add --dev @types/google-protobuf
+
+# or
+$ yarn add grpc google-protobuf
+$ yarn add --dev @types/google-protobuf
 ```
 
 ## Usage
@@ -46,7 +54,7 @@ import { makeModernClient } from "grpc-modern";
 
 const client = makeModernClient(SomethingClient, {
   address: "example.com:80",
-  credentials: grpc.credentials.createInsecure(),
+  credential: grpc.credentials.createInsecure(),
 });
 
 const response = await client.getSomething(
@@ -63,7 +71,7 @@ import * as grpc from "grpc";
 
 const client = makeModernClient(SomethingClient, {
   address: "example.com:80",
-  credentials: grpc.credentials.createInsecure(),
+  credential: grpc.credentials.createInsecure(),
 });
 
 const response = await client.getSomething(
