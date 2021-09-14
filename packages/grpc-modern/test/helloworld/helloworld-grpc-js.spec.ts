@@ -81,7 +81,7 @@ describe("helloworld (grpc-js)", () => {
         set(ThrowTwoTimesReq, { clientId: "1times retry" }),
         {
           retry: {
-            attempt: 1,
+            maxAttemptCount: 1,
             failCodes: [grpc.status.UNAVAILABLE],
           },
         }
@@ -93,7 +93,7 @@ describe("helloworld (grpc-js)", () => {
         set(ThrowTwoTimesReq, { clientId: "2times retry" }),
         {
           retry: {
-            attempt: 2,
+            maxAttemptCount: 2,
             failCodes: [grpc.status.UNAVAILABLE],
           },
         }

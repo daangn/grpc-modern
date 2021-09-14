@@ -66,7 +66,7 @@ type CallOptions = GrpcCallOptions & GrpcJsCallOptions;
 type Status = GrpcStatus | GrpcJsStatus;
 
 export interface GrpcRetryOption {
-  attempt: number;
+  maxAttemptCount: number;
   failCodes: Array<Status>;
 }
 
@@ -100,15 +100,13 @@ export function promisify<M extends Message, R extends { toObject(): any }>(
     const { metadata, callOptions } = options ?? {};
 
     const retry = options?.retry ?? parentOptions.retry;
-    const maxAttemptCount = retry?.attempt;
-    const failCodes = retry?.failCodes;
 
     return pRetry(
       () =>
         new Promise<PromisifiedMethodResult<R>>((resolve, reject) => {
           const callback: GrpcCallback<R> = (error, response) => {
             if (error) {
-              error.code && failCodes?.includes(error.code)
+              error.code && retry?.failCodes?.includes(error.code)
                 ? reject(error)
                 : reject(new pRetry.AbortError(error));
             } else {
@@ -125,7 +123,7 @@ export function promisify<M extends Message, R extends { toObject(): any }>(
           }
         }),
       {
-        retries: maxAttemptCount,
+        retries: retry?.maxAttemptCount,
       }
     );
   };

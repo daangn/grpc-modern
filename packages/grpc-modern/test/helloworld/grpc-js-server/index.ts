@@ -13,7 +13,7 @@ import {
 export function makeServer({ port }: { port: number }) {
   const server = new grpc.Server();
 
-  const attemptHistory = new Map<string, number>();
+  const attemptCountMap = new Map<string, number>();
 
   const greeterServer: IGreeterServer = {
     sayHello(call, callback) {
@@ -33,12 +33,12 @@ export function makeServer({ port }: { port: number }) {
     },
 
     throwTwoTimes(call, callback) {
-      if (!attemptHistory.has(call.request.getClientId())) {
-        attemptHistory.set(call.request.getClientId(), 1);
+      if (!attemptCountMap.has(call.request.getClientId())) {
+        attemptCountMap.set(call.request.getClientId(), 1);
       }
 
-      const attemptCount = attemptHistory.get(call.request.getClientId()) ?? 1;
-      attemptHistory.set(call.request.getClientId(), attemptCount + 1);
+      const attemptCount = attemptCountMap.get(call.request.getClientId()) ?? 1;
+      attemptCountMap.set(call.request.getClientId(), attemptCount + 1);
 
       if (attemptCount > 2) {
         callback(null, set(ThrowTwoTimesRes, {}));
