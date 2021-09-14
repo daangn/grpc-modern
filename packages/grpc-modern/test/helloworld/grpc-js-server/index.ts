@@ -5,10 +5,15 @@ import {
   GreeterService,
   IGreeterServer,
 } from "../../__generated__/grpc-js/helloworld/helloworld_grpc_pb";
-import { SayHelloRes } from "../../__generated__/grpc-js/helloworld/helloworld_pb";
+import {
+  SayHelloRes,
+  ThrowTwoTimesRes,
+} from "../../__generated__/grpc-js/helloworld/helloworld_pb";
 
 export function makeServer({ port }: { port: number }) {
   const server = new grpc.Server();
+
+  const attemptCountMap = new Map<string, number>();
 
   const greeterServer: IGreeterServer = {
     sayHello(call, callback) {
@@ -25,6 +30,29 @@ export function makeServer({ port }: { port: number }) {
         name: "INTERNAL_SERVER_ERROR",
         message: "Error example",
       });
+    },
+
+    throwTwoTimes(call, callback) {
+      if (!attemptCountMap.has(call.request.getClientId())) {
+        attemptCountMap.set(call.request.getClientId(), 1);
+      }
+
+      const attemptCount = attemptCountMap.get(call.request.getClientId()) ?? 1;
+      attemptCountMap.set(call.request.getClientId(), attemptCount + 1);
+
+      if (attemptCount > 2) {
+        callback(null, set(ThrowTwoTimesRes, {}));
+        return;
+      }
+
+      callback(
+        {
+          code: grpc.status.UNAVAILABLE,
+          name: "Unavailable",
+          message: "Error example",
+        },
+        set(ThrowTwoTimesRes, {})
+      );
     },
   };
 

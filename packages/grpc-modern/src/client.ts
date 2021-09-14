@@ -10,6 +10,7 @@ import {
 import {
   GrpcJsMethod,
   GrpcMethod,
+  GrpcRetryOption,
   PromisifiedMethod,
   promisify,
 } from "./promisify";
@@ -44,6 +45,7 @@ export function makeModernClient<C extends Client>(
     credential: C extends GrpcClient
       ? GrpcChannelCredentials
       : GrpcJsChannelCredentials;
+    retry?: GrpcRetryOption;
     options?: object;
   }
 ): ModernClient<C> {
@@ -56,7 +58,7 @@ export function makeModernClient<C extends Client>(
 
   for (const key in _clientConstructor.service) {
     const method = _client[key].bind(_client);
-    _client[key] = promisify(method);
+    _client[key] = promisify(method, options);
   }
 
   return _client;

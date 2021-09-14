@@ -10,6 +10,7 @@ import * as helloworld_helloworld_pb from "../helloworld/helloworld_pb";
 interface IGreeterService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
     sayHello: IGreeterService_ISayHello;
     throw: IGreeterService_IThrow;
+    throwTwoTimes: IGreeterService_IThrowTwoTimes;
 }
 
 interface IGreeterService_ISayHello extends grpc.MethodDefinition<helloworld_helloworld_pb.SayHelloReq, helloworld_helloworld_pb.SayHelloRes> {
@@ -30,12 +31,22 @@ interface IGreeterService_IThrow extends grpc.MethodDefinition<helloworld_hellow
     responseSerialize: grpc.serialize<helloworld_helloworld_pb.ThrowRes>;
     responseDeserialize: grpc.deserialize<helloworld_helloworld_pb.ThrowRes>;
 }
+interface IGreeterService_IThrowTwoTimes extends grpc.MethodDefinition<helloworld_helloworld_pb.ThrowTwoTimesReq, helloworld_helloworld_pb.ThrowTwoTimesRes> {
+    path: "/helloworld.Greeter/ThrowTwoTimes";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<helloworld_helloworld_pb.ThrowTwoTimesReq>;
+    requestDeserialize: grpc.deserialize<helloworld_helloworld_pb.ThrowTwoTimesReq>;
+    responseSerialize: grpc.serialize<helloworld_helloworld_pb.ThrowTwoTimesRes>;
+    responseDeserialize: grpc.deserialize<helloworld_helloworld_pb.ThrowTwoTimesRes>;
+}
 
 export const GreeterService: IGreeterService;
 
 export interface IGreeterServer extends grpc.UntypedServiceImplementation {
     sayHello: grpc.handleUnaryCall<helloworld_helloworld_pb.SayHelloReq, helloworld_helloworld_pb.SayHelloRes>;
     throw: grpc.handleUnaryCall<helloworld_helloworld_pb.ThrowReq, helloworld_helloworld_pb.ThrowRes>;
+    throwTwoTimes: grpc.handleUnaryCall<helloworld_helloworld_pb.ThrowTwoTimesReq, helloworld_helloworld_pb.ThrowTwoTimesRes>;
 }
 
 export interface IGreeterClient {
@@ -45,6 +56,9 @@ export interface IGreeterClient {
     throw(request: helloworld_helloworld_pb.ThrowReq, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowRes) => void): grpc.ClientUnaryCall;
     throw(request: helloworld_helloworld_pb.ThrowReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowRes) => void): grpc.ClientUnaryCall;
     throw(request: helloworld_helloworld_pb.ThrowReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowRes) => void): grpc.ClientUnaryCall;
+    throwTwoTimes(request: helloworld_helloworld_pb.ThrowTwoTimesReq, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowTwoTimesRes) => void): grpc.ClientUnaryCall;
+    throwTwoTimes(request: helloworld_helloworld_pb.ThrowTwoTimesReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowTwoTimesRes) => void): grpc.ClientUnaryCall;
+    throwTwoTimes(request: helloworld_helloworld_pb.ThrowTwoTimesReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowTwoTimesRes) => void): grpc.ClientUnaryCall;
 }
 
 export class GreeterClient extends grpc.Client implements IGreeterClient {
@@ -55,4 +69,7 @@ export class GreeterClient extends grpc.Client implements IGreeterClient {
     public throw(request: helloworld_helloworld_pb.ThrowReq, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowRes) => void): grpc.ClientUnaryCall;
     public throw(request: helloworld_helloworld_pb.ThrowReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowRes) => void): grpc.ClientUnaryCall;
     public throw(request: helloworld_helloworld_pb.ThrowReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowRes) => void): grpc.ClientUnaryCall;
+    public throwTwoTimes(request: helloworld_helloworld_pb.ThrowTwoTimesReq, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowTwoTimesRes) => void): grpc.ClientUnaryCall;
+    public throwTwoTimes(request: helloworld_helloworld_pb.ThrowTwoTimesReq, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowTwoTimesRes) => void): grpc.ClientUnaryCall;
+    public throwTwoTimes(request: helloworld_helloworld_pb.ThrowTwoTimesReq, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: helloworld_helloworld_pb.ThrowTwoTimesRes) => void): grpc.ClientUnaryCall;
 }

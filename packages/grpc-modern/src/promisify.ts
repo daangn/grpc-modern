@@ -3,14 +3,17 @@ import {
   ClientUnaryCall as GrpcClientUnaryCall,
   Metadata as GrpcMetadata,
   ServiceError as GrpcServiceError,
+  status as GrpcStatus,
 } from "grpc";
 import {
   CallOptions as GrpcJsCallOptions,
   ClientUnaryCall as GrpcJsClientUnaryCall,
   Metadata as GrpcJsMetadata,
   ServiceError as GrpcJsServiceError,
+  status as GrpcJsStatus,
 } from "@grpc/grpc-js";
 import { Message } from "google-protobuf";
+import pRetry from "p-retry";
 
 export type GrpcCallback<R> = (
   error: GrpcServiceError | null,
@@ -60,53 +63,68 @@ export interface GrpcJsMethod<
 
 type Metadata = GrpcMetadata | GrpcJsMetadata;
 type CallOptions = GrpcCallOptions & GrpcJsCallOptions;
+type Status = GrpcStatus | GrpcJsStatus;
+
+export interface GrpcRetryOption {
+  maxAttemptCount: number;
+  failCodes: Array<Status>;
+}
 
 export type PromisifiedMethod<M extends Message, R> = {
-  (message: M): Promise<PromisifiedMethodResult<R>>;
-  (message: M, metadata: Metadata): Promise<PromisifiedMethodResult<R>>;
-  (message: M, metadata: Metadata, options: Partial<CallOptions>): Promise<
-    PromisifiedMethodResult<R>
-  >;
+  (
+    message: M,
+    option?: {
+      metadata?: Metadata;
+      callOptions?: Partial<CallOptions>;
+      retry?: GrpcRetryOption;
+    }
+  ): Promise<PromisifiedMethodResult<R>>;
 };
 
 type PromisifiedMethodResult<R> = R extends { toObject(): infer O } ? O : never;
 
 export function promisify<M extends Message, R extends { toObject(): any }>(
-  method: GrpcMethod<M, R>
+  method: GrpcMethod<M, R>,
+  options: { retry?: GrpcRetryOption }
 ): PromisifiedMethod<M, R> {
-  function promisified(message: M): Promise<PromisifiedMethodResult<R>>;
-  function promisified(
+  const parentOptions = options;
+
+  return function promisified(
     message: M,
-    metadata: Metadata
-  ): Promise<PromisifiedMethodResult<R>>;
-  function promisified(
-    message: M,
-    metadata: Metadata,
-    options: Partial<CallOptions>
-  ): Promise<PromisifiedMethodResult<R>>;
-  function promisified(
-    message: M,
-    metadata?: Metadata,
-    options?: Partial<CallOptions>
+    options?: {
+      metadata?: Metadata;
+      callOptions?: Partial<CallOptions>;
+      retry?: GrpcRetryOption;
+    }
   ): Promise<PromisifiedMethodResult<R>> {
-    return new Promise<PromisifiedMethodResult<R>>((resolve, reject) => {
-      const callback: GrpcCallback<R> = (error, response) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response.toObject());
-        }
-      };
+    const { metadata, callOptions } = options ?? {};
 
-      if (metadata && options) {
-        return method(message, metadata, options, callback);
-      } else if (metadata) {
-        return method(message, metadata, callback);
-      } else {
-        return method(message, callback);
+    const retry = options?.retry ?? parentOptions.retry;
+
+    return pRetry(
+      () =>
+        new Promise<PromisifiedMethodResult<R>>((resolve, reject) => {
+          const callback: GrpcCallback<R> = (error, response) => {
+            if (error) {
+              error.code && retry?.failCodes?.includes(error.code)
+                ? reject(error)
+                : reject(new pRetry.AbortError(error));
+            } else {
+              resolve(response.toObject());
+            }
+          };
+
+          if (metadata && callOptions) {
+            return method(message, metadata, callOptions, callback);
+          } else if (metadata) {
+            return method(message, metadata, callback);
+          } else {
+            return method(message, callback);
+          }
+        }),
+      {
+        retries: retry?.maxAttemptCount,
       }
-    });
-  }
-
-  return promisified;
+    );
+  };
 }

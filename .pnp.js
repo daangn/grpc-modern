@@ -3002,6 +3002,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/retry", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@types-retry-npm-0.12.1-05f3303aac-476db201ed.zip/node_modules/@types/retry/",
+          "packageDependencies": [
+            ["@types/retry", "npm:0.12.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/stack-utils", [
         ["npm:2.0.1", {
           "packageLocation": "./.yarn/cache/@types-stack-utils-npm-2.0.1-867718ab70-a5277189a3.zip/node_modules/@types/stack-utils/",
@@ -4899,6 +4908,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["grpc-tools", "npm:1.11.2"],
             ["grpc_tools_node_protoc_ts", "npm:5.3.2"],
             ["jest", "virtual:8cf2f2072a46ca9bc29fc70a1ecb50e96807ff334edd2e8ceffdd63e019e1d4daad4ada0830988012ec98a68b77a3bc981caec5d825d1df76304a64511dcedb9#npm:27.0.6"],
+            ["p-retry", "npm:4.6.1"],
             ["rimraf", "npm:3.0.2"],
             ["typescript", "patch:typescript@npm%3A4.3.5#builtin<compat/typescript>::version=4.3.5&hash=ddfc1b"]
           ],
@@ -6987,6 +6997,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["p-retry", [
+        ["npm:4.6.1", {
+          "packageLocation": "./.yarn/cache/p-retry-npm-4.6.1-1a06a28faf-b4a5673d68.zip/node_modules/p-retry/",
+          "packageDependencies": [
+            ["p-retry", "npm:4.6.1"],
+            ["@types/retry", "npm:0.12.1"],
+            ["retry", "npm:0.13.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["p-try", [
         ["npm:2.2.0", {
           "packageLocation": "./.yarn/cache/p-try-npm-2.2.0-e0390dbaf8-20983f3765.zip/node_modules/p-try/",
@@ -7464,6 +7485,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/retry-npm-0.12.0-72ac7fb4cc-51f2fddddb.zip/node_modules/retry/",
           "packageDependencies": [
             ["retry", "npm:0.12.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.13.1", {
+          "packageLocation": "./.yarn/cache/retry-npm-0.13.1-89eb100ab6-f61641ec87.zip/node_modules/retry/",
+          "packageDependencies": [
+            ["retry", "npm:0.13.1"]
           ],
           "linkType": "HARD",
         }]
