@@ -79,3 +79,40 @@ export namespace ThrowRes {
     export type AsObject = {
     }
 }
+
+export class ThrowTwoTimesReq extends jspb.Message { 
+    getClientId(): string;
+    setClientId(value: string): ThrowTwoTimesReq;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ThrowTwoTimesReq.AsObject;
+    static toObject(includeInstance: boolean, msg: ThrowTwoTimesReq): ThrowTwoTimesReq.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ThrowTwoTimesReq, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ThrowTwoTimesReq;
+    static deserializeBinaryFromReader(message: ThrowTwoTimesReq, reader: jspb.BinaryReader): ThrowTwoTimesReq;
+}
+
+export namespace ThrowTwoTimesReq {
+    export type AsObject = {
+        clientId: string,
+    }
+}
+
+export class ThrowTwoTimesRes extends jspb.Message { 
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ThrowTwoTimesRes.AsObject;
+    static toObject(includeInstance: boolean, msg: ThrowTwoTimesRes): ThrowTwoTimesRes.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ThrowTwoTimesRes, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ThrowTwoTimesRes;
+    static deserializeBinaryFromReader(message: ThrowTwoTimesRes, reader: jspb.BinaryReader): ThrowTwoTimesRes;
+}
+
+export namespace ThrowTwoTimesRes {
+    export type AsObject = {
+    }
+}

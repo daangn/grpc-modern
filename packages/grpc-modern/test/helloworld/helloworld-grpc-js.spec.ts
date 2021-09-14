@@ -5,15 +5,19 @@ import { GreeterClient } from "../__generated__/grpc-js/helloworld/helloworld_gr
 import {
   SayHelloReq,
   ThrowReq,
+  ThrowTwoTimesReq,
 } from "../__generated__/grpc-js/helloworld/helloworld_pb";
+
 import { makeServer } from "./grpc-js-server";
 
 let server: ReturnType<typeof makeServer>;
 let client: ModernClient<GreeterClient>;
 
+jest.setTimeout(30000);
+
 describe("helloworld (grpc-js)", () => {
   beforeAll(async () => {
-    const PORT = 50010;
+    const PORT = 50011;
 
     server = makeServer({ port: PORT });
     client = makeModernClient(GreeterClient, {
@@ -42,7 +46,9 @@ describe("helloworld (grpc-js)", () => {
         set(SayHelloReq, {
           name,
         }),
-        new grpc.Metadata()
+        {
+          metadata: new grpc.Metadata(),
+        }
       )
     ).resolves.toEqual({
       message: `Hello, ${name}`,
@@ -53,9 +59,11 @@ describe("helloworld (grpc-js)", () => {
         set(SayHelloReq, {
           name,
         }),
-        new grpc.Metadata(),
         {
-          deadline: Date.now() + 1000,
+          metadata: new grpc.Metadata(),
+          callOptions: {
+            deadline: Date.now() + 1000,
+          },
         }
       )
     ).resolves.toEqual({
@@ -65,6 +73,32 @@ describe("helloworld (grpc-js)", () => {
     await expect(client.throw(set(ThrowReq, {}))).rejects.toEqual(
       new Error("13 INTERNAL: Error example")
     );
+  });
+
+  test("retry", async () => {
+    await expect(
+      client.throwTwoTimes(
+        set(ThrowTwoTimesReq, { clientId: "1times retry" }),
+        {
+          retry: {
+            attempt: 1,
+            failCodes: [grpc.status.UNAVAILABLE],
+          },
+        }
+      )
+    ).rejects.toEqual(new Error("14 UNAVAILABLE: Error example"));
+
+    await expect(
+      client.throwTwoTimes(
+        set(ThrowTwoTimesReq, { clientId: "2times retry" }),
+        {
+          retry: {
+            attempt: 2,
+            failCodes: [grpc.status.UNAVAILABLE],
+          },
+        }
+      )
+    ).resolves.toEqual({});
   });
 
   afterAll(() => {

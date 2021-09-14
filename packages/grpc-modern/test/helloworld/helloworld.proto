@@ -5,6 +5,7 @@ package helloworld;
 service Greeter {
   rpc SayHello (SayHelloReq) returns (SayHelloRes) {}
   rpc Throw (ThrowReq) returns (ThrowRes) {}
+  rpc ThrowTwoTimes(ThrowTwoTimesReq) returns (ThrowTwoTimesRes) {}
 }
 
 message SayHelloReq {
@@ -17,3 +18,9 @@ message SayHelloRes {
 
 message ThrowReq {}
 message ThrowRes {}
+
+message ThrowTwoTimesReq {
+  string client_id = 1;
+}
+
+message ThrowTwoTimesRes {}

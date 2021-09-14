@@ -1,6 +1,6 @@
 {
   "name": "grpc-modern",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "repository": "https://github.com/daangn/grpc-modern",
   "license": "Apache-2.0",
   "author": "Tony Won <tony@daangn.com>",
@@ -44,5 +44,8 @@
     "@grpc/grpc-js": "^1.0.0",
     "@types/google-protobuf": "^3.0.0",
     "grpc": "^1.0.0"
+  },
+  "dependencies": {
+    "p-retry": "^4.6.1"
   }
 }
